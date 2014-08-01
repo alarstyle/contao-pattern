@@ -171,6 +171,8 @@ class Pattern extends \Controller
                 default:
                     $value = null;
             }
+
+            // Prepare variables for output
             if ($forOutput) {
                 switch ($type)
                 {
@@ -192,6 +194,7 @@ class Pattern extends \Controller
                         break;
                 }
             }
+
             $arrVars[$objVars->name]['value']  = $value;
         }
 
@@ -227,7 +230,7 @@ class Pattern extends \Controller
     {
         static::$table = \Input::get('table');
 
-        static::$isEnabled = (static::$table === \ContentModel::getTable() || static::$table === \ModuleModel::getTable()) && (\Input::get('act') === 'edit' || TL_SCRIPT === 'contao/file.php');
+        static::$isEnabled = ($this->isContent() || $this->isModule()) && (\Input::get('act') === 'edit' || TL_SCRIPT === 'contao/file.php');
 
         if (!static::$isEnabled)
         {
@@ -296,7 +299,7 @@ class Pattern extends \Controller
         {
             return static::$templatesDataCache[$strTemplate];
         }
-        
+
         try
         {
             $strPath = \PatternTemplate::getTemplate($strTemplate);
@@ -518,8 +521,9 @@ class Pattern extends \Controller
 
         foreach($arrVars as $strVarName=>$objVariable)
         {
-            static::$arrVariables[$strVarName]['id'] = $objVariable['id'];
-            static::$arrVariables[$strVarName]['value'] = $objVariable['value'];
+            static::$arrVariables[$strVarName]['id']        = $objVariable['id'];
+            static::$arrVariables[$strVarName]['value']     = $objVariable['value'];
+            static::$arrVariables[$strVarName]['tstamp']    = $objVariable['tstamp'];
         }
     }
 
@@ -619,7 +623,7 @@ class Pattern extends \Controller
                 $var->save();
             }
             // Update variable
-            elseif (!empty($objVariable['id']) && strlen($newValue) > 0 && $objVariable['value'] !== $newValue)
+            elseif (!empty($objVariable['id']) && strlen($newValue) > 0 && ($objVariable['value'] !== (string)$newValue || $objVariable['tstamp'] === 0))
             {
                 VariableModel::updateVariable($objVariable['id'], $objVariable['type'], $strDbField, $newValue);
             }
@@ -645,20 +649,24 @@ class Pattern extends \Controller
 
     public function copyVariables($newId, $dc)
     {
-        /*echo "COPY";
-        if (!$dc->activeRecord || !$dc->activeRecord->id || $dc->activeRecord->type !== 'pattern')
+        if (!$this->isContent() && !$this->isModule())
         {
             return;
         }
 
-        \Database::getInstance()->prepare("INSERT INTO ? (pid, ptable, name, text, textarea, image, checkbox) SELECT ?, ptable, name, text, textarea, image, checkbox FROM ? WHERE pid=? AND ptable=?")
+        $objElement = $this->isContent() ? \ContentModel::findByPk(\Input::get('id')) : \ModuleModel::findByPk(\Input::get('id'));
+
+        if (empty($objElement) || $objElement->type != 'pattern' || empty($objElement->ptr_template))
+        {
+            return;
+        }
+
+        \Database::getInstance()->prepare("INSERT INTO " . VariableModel::getTable() . " (pid, ptable, type, name, text, textarea, html, file, folder, checkbox, date, time, datetime, color) SELECT ?, ptable, type, name, text, textarea, html, file, folder, checkbox, date, time, datetime, color FROM " . VariableModel::getTable() . " WHERE pid=? AND ptable=?")
             ->execute(
-                VariableModel::getTable(),
                 $newId,
-                VariableModel::getTable(),
-                $dc->activeRecord->id,
-                \ContentModel::getTable()
-            );*/
+                \Input::get('id'),
+                static::$table
+            );
     }
 
 }
