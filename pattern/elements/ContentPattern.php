@@ -37,8 +37,11 @@ class ContentPattern extends \ContentElement
 		{
 			$objTemplate = new \BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### ' . utf8_strtoupper($GLOBALS['TL_LANG']['CTE']['pattern'][0]) . ' ###';
-			$objTemplate->title = $this->ptr_template;
+            $this->import('Pattern', 'Pattern');
+            $data = $this->Pattern->getDataFromTemplate($this->ptr_template);
+            $templateTitle = $data['label'];
+
+			$objTemplate->wildcard = '### ' . $templateTitle . ' ###';
 
 			return $objTemplate->parse();
 		}

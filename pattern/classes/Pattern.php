@@ -10,6 +10,7 @@
  * @license    http://opensource.org/licenses/MIT
  */
 
+
 namespace Pattern;
 
 
@@ -18,6 +19,11 @@ namespace Pattern;
  */
 class Pattern extends \Controller
 {
+
+    /**
+     * Storing parsed templates data
+     */
+    protected static $templatesDataCache = array();
 
     /**
      * Storing variables array for backend editing
@@ -286,6 +292,11 @@ class Pattern extends \Controller
      */
     public function getDataFromTemplate($strTemplate)
     {
+        if (!empty(static::$templatesDataCache[$strTemplate]))
+        {
+            return static::$templatesDataCache[$strTemplate];
+        }
+        
         try
         {
             $strPath = \PatternTemplate::getTemplate($strTemplate);
@@ -328,6 +339,10 @@ class Pattern extends \Controller
 
         foreach ($arrData['variables'] as $k=>$arrVar)
         {
+            if (is_string($arrVar))
+            {
+                $arrVar = array("type" => $arrVar);
+            }
 
             switch($arrVar['type'])
             {
@@ -442,6 +457,8 @@ class Pattern extends \Controller
         }
 
         $arrData['variables'] = $arrVariables;
+
+        static::$templatesDataCache[$strTemplate] = $arrData;
 
         return $arrData;
     }
