@@ -43,5 +43,6 @@ if (TL_MODE == 'BE')
     /**
      * Hooks
      */
-    $GLOBALS['TL_HOOKS']['initializeSystem'][] = array('Pattern', 'initializeSystem');
+    $GLOBALS['TL_HOOKS']['initializeSystem'][]  = array('Pattern', 'initializeSystem');
+    $GLOBALS['TL_HOOKS']['reviseTable'][]       = array('Pattern', 'reviseTable');
 }

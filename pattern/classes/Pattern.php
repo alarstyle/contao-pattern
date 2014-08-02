@@ -669,4 +669,21 @@ class Pattern extends \Controller
             );
     }
 
+
+    public function reviseTable($table, $new_records, $parent_table, $child_tables)
+    {
+        if (!$this->isContent() && !$this->isModule())
+        {
+            return false;
+        }
+
+        $objStmt = \Database::getInstance()->execute("DELETE FROM " . VariableModel::getTable() . " WHERE tstamp=0");
+
+        return $objStmt->affectedRows > 0;
+
+        //var_dump($table);
+        //var_dump($new_records);
+        //throw new \Exception('stop');
+    }
+
 }
