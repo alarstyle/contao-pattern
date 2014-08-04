@@ -290,6 +290,7 @@ class Pattern extends \Controller
 
     /**
      * Parse template file
+     *
      * @param $strTemplate
      * @return array
      */
@@ -528,6 +529,12 @@ class Pattern extends \Controller
     }
 
 
+    /**
+     * Save variables to database
+     * Called on onsubmit_callback of table
+     *
+     * @param $dc
+     */
     public function saveVariables($dc)
     {
         if (!static::$isEnabled || $_POST['type'] !== 'pattern' || empty(static::$arrVariables))
@@ -636,6 +643,12 @@ class Pattern extends \Controller
     }
 
 
+    /**
+     * Delete variables from database
+     * Called on ondelete_callback of table
+     *
+     * @param $dc
+     */
     public function deleteVariables($dc)
     {
         if (!$dc->activeRecord || !$dc->activeRecord->id || $dc->activeRecord->type !== 'pattern')
@@ -647,6 +660,13 @@ class Pattern extends \Controller
     }
 
 
+    /**
+     * Copy variables of a pattern element
+     * Called on oncopy_callback of table
+     *
+     * @param $newId
+     * @param $dc
+     */
     public function copyVariables($newId, $dc)
     {
         if (!$this->isContent() && !$this->isModule())
@@ -670,6 +690,10 @@ class Pattern extends \Controller
     }
 
 
+    /**
+     * Delete unfinished variables from database
+     * Called on 'reviseTable' hook
+     */
     public function reviseTable($table, $new_records, $parent_table, $child_tables)
     {
         if (!$this->isContent() && !$this->isModule())
@@ -680,10 +704,6 @@ class Pattern extends \Controller
         $objStmt = \Database::getInstance()->execute("DELETE FROM " . VariableModel::getTable() . " WHERE tstamp=0");
 
         return $objStmt->affectedRows > 0;
-
-        //var_dump($table);
-        //var_dump($new_records);
-        //throw new \Exception('stop');
     }
 
 }
