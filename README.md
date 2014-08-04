@@ -7,7 +7,7 @@ Extension for Contao Open Source CMS. It allows you to add external templates wi
 ## Usage
 Pattern templates must be placed in `template` folder, and all template names should start with `ptr_` prefix (for example `ptr_my_template.html5`).
   
-Here is an example:
+Here is an example of content:
 ```
 {{%
     "label":
@@ -37,14 +37,14 @@ Here is an example:
 
 ## Template labels
 
-
-One label for all languages:
+You can define label for template name, it will be shown instead of file name in the template select field.
+It can be one label for all backend languages:
 ```
 {{%
     "label": "Template Label"
 %}}
 ```
-Multilanguage label:
+or specific label for different languages:
 ```
 {{%
     "label": 
@@ -55,9 +55,9 @@ Multilanguage label:
 %}}
 ```
 ## Variable declaration
-There are several methods to define variable.  
+There are several ways to define variable.  
 
-Simple one:
+simple one:
 ```
 {{%
     "variables":
@@ -67,14 +67,14 @@ Simple one:
 %}}
 ```
     
-More complex:
+and more complex:
 ```
 {{%
     "variables":
     {
         "var_1":
         {
-            "label":        ["Var 1", "Some text here"]
+            "label":        ["Var 1", "Some tip here"]
             "type":         "text",
             "mandatory":    true,
             "class":        "w50"
@@ -85,8 +85,8 @@ More complex:
 
 ## Variable Parameters
 
-**label** - label of variable
-You can use any of the following methods, depending on what you prefer
+**label** - label of variable  
+You can use any of the following ways, depending on what you prefer
 ```
 "label": "Title"
 ```
@@ -144,7 +144,7 @@ You can output variable with insert tag
 ```
 {%var_name%}
 ``` 
-or use PHP function in the template
+or use PHP function in the template to get the value
 ```
 <?php echo $this->patternVar("var_name") ?>
 ```
@@ -154,6 +154,3 @@ or use PHP function in the template
 # License
 [MIT](LICENSE)
 Copyright &copy; Alexander Stulnikov
-
-
-  [1]: docs/sreen_pattern.png "Pattern features preview"
