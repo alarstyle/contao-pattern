@@ -107,7 +107,7 @@ You can use any of the following ways, depending on what you prefer
     "ru": ["Заголовок", "Подсказка"]
 }
 ```
-**type** - type of variable ([see types of variables]())
+**type** - type of variable ([see types of variables](#types))
 ```
 "type": "text"
 ```
@@ -125,6 +125,7 @@ You can use any of the following ways, depending on what you prefer
 "extensions": "doc, txt"
 ```
 
+<a name="types"/>
 ## Variable Types
 
  - **text**
@@ -152,5 +153,5 @@ or use PHP function in the template to get the value
 ----------
 
 # License
-[MIT](LICENSE)
+[MIT](LICENSE)  
 Copyright &copy; Alexander Stulnikov
